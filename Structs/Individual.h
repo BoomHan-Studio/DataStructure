@@ -63,19 +63,33 @@ struct FIndividual
      *@param another 另一个单项式对象引用
      *@return 二者的系数、指数是否都相等
      */
-    bool operator ==(const FIndividual& another);
+    bool operator ==(const FIndividual& another) const;
 
     /**
      *@brief 指数是否比另一个大。
      *@param another 另一个单项式对象引用
      *@return 前者的指数是否更大
      */
-    bool operator >(const FIndividual& another);
+    bool operator >(const FIndividual& another) const;
 
     /**
      *@brief 指数是否比另一个小。
      *@param another 另一个单项式对象引用
      *@return 前者的指数是否更小
      */
-    bool operator <(const FIndividual& another);
+    bool operator <(const FIndividual& another) const;
+
+    /**
+     *@brief 指数是否不比另一个小。
+     *@param another 另一个单项式对象引用
+     *@return 前者的指数是否不是更小
+     */
+    bool operator >=(const FIndividual& another) const;
+
+    /**
+     *@brief 指数是否不比另一个大。
+     *@param another 另一个单项式对象引用
+     *@return 前者的指数是否不是更大
+     */
+    bool operator <=(const FIndividual& another) const;
 };

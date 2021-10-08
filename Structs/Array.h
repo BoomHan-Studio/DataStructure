@@ -1,15 +1,7 @@
 ﻿#pragma once
 #include "LinkNode.h"
-#include "Enums/EnumLibrary.h"
+#include "CoreMinimal.h"
 #include "FunctionLibrarys/DataHandleStatics.h"
-
-#define S_PRIVATE(variable); private:\
-                                variable;\
-                          public:\
-
-#define S_PROTECTED(variable); protected:\
-                                variable;\
-                            public:
 
 /**
  *@brief 模板结构体：数组(链表)
@@ -193,6 +185,7 @@ struct TArray
      *@brief 在数组中插入数据。
      *@param inValue 插入的值对象引用
      *@param inIndex 目标索引值
+     *@note 如果输入索引存在越界现象，则会将其对数组大小size求余后运算。
      *@note 会在目标索引的前面插入一个新节点。
      */
     void Insert(const T& inValue, int inIndex)
@@ -236,7 +229,7 @@ struct TArray
                 return outIndex;
             }
         }
-        return -1;
+        return NOT_FOUND;
     }
 
     /**
@@ -248,11 +241,11 @@ struct TArray
     {
         try
         {
-            FNode& targetNode = At(inIndex);
+            FNode targetNode = At(inIndex);
         }
         catch (int)
         {
-            std::cout << "ERROR!" << std::endl;
+            std::cout << "Exception in Array.h : RemoveByIndex()" << std::endl;
             return;
         }
         FNode& targetNode = At(inIndex);
@@ -391,15 +384,30 @@ struct TArray
         return At(index).Element;
     }
 
-    void SortArray(ETraversalMethod inMethod = Sequential)
+    /**
+     *@brief 为此数组由大到小排序。
+     *@version 1.0
+     *@param inMethod 排序方式，HighToLow是由高到低，LowToHigh是由低到高
+     *@note 当前版本排序方法为：选择排序法，复杂度O(n^2)。
+     */
+    void SortArray(ESortMethod inMethod = HighToLow)
     {
-        auto compare = (inMethod == Sequential ? [](const T& ta, const T& tb)->bool{return (ta > tb);} : [](const T& ta, const T& tb)->bool{return (ta <= tb);});
-        for (FNode* beginNode = Head; beginNode != nullptr; beginNode = beginNode->Next)
+        auto compare = (inMethod == LowToHigh ? [](const T& ta, const T& tb)->bool{return (ta <= tb);} : [](const T& ta, const T& tb)->bool{return (ta > tb);});
+        if (size < 2) return;
+        for (FNode* nodeI = Head; nodeI != Tair; nodeI = nodeI->Next)
         {
-            //尚未完工。
-            /*UDataHandleStatics::Swap(&ele1, &(*targetIt));
-            PrintF();
-            std::cin.get();*/
+            FNode* targetNode = nodeI;
+            for (FNode* nodeJ = nodeI->Next; nodeJ; nodeJ = nodeJ->Next)
+            {
+                if (compare(nodeJ->Element, targetNode->Element))
+                {
+                    targetNode = nodeJ;
+                }
+            }
+            if (!nodeI->IsEqualTo(*targetNode, ValueRequired))
+            {
+                UDataHandleStatics::Swap(nodeI, targetNode, [](FNode* nodeA, FNode* nodeB)->void{nodeA->Element = nodeB->Element;});
+            }
         }
     }
 
@@ -663,15 +671,21 @@ struct TArrayIterator
      *@brief 根据遍历方式不同移动一次。
      *@param inMethod 迭代方式
      */
-    TArrayIterator& MoveIterator(ETraversalMethod inMethod)
+    TArrayIterator& MoveIterator(ETraversalMethod inMethod, unsigned int moveTimes = 1)
     {
         if (inMethod == Sequential)
         {
-            ++(*this);
+            while (moveTimes--)
+            {
+                ++(*this);
+            }
         }
         else
         {
-            --(*this);
+            while (moveTimes--)
+            {
+                --(*this);
+            }
         }
         return (*this);
     }

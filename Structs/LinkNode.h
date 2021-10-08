@@ -89,27 +89,27 @@ struct TLinkNode
     /**
      *@brief 此节点是否与另一节点相等
      *@param another 另一个节点对象引用
-     *@param require 要求(枚举值)
-     *@param requires 更多要求
+     *@param inRequire 要求(枚举值)
+     *@param inRequires 更多要求
      *@return 若满足所有要求则返回真，否则返回假
      *@note 要求的个数不做限制。
      */
     template<typename T0, typename ... Ts>
-    bool IsEqualTo(const TLinkNode& another, T0 require = ValueRequired, Ts ... requires)
+    bool IsEqualTo(const TLinkNode& another, T0 inRequire = ValueRequired, Ts ... inRequires)
     {
-        return IsEqualTo(another, require) * IsEqualTo(another, requires ...);
+        return IsEqualTo(another, inRequire) * IsEqualTo(another, inRequires ...);
     }
 
     /**
      *@brief 此节点是否与另一节点相等
      *@param another 另一个节点对象引用
-     *@param require 要求(枚举值)
+     *@param inRequire 要求(枚举值)
      *@return 若满足该单一要求则返回真，否则返回假
      *@note 此重载版本只能有一个要求。
      */
-    bool IsEqualTo(const TLinkNode& another, ELinkNodeEqual require)
+    bool IsEqualTo(const TLinkNode& another, ELinkNodeEqual inRequire)
     {
-        switch (require)
+        switch (inRequire)
         {
         case LastPtrRequired:
             return (Last == another.Last);

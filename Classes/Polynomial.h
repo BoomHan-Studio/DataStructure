@@ -1,20 +1,17 @@
 ﻿#pragma once
 #include "Structs/Array.h"
 #include "Structs/Individual.h"
+#include "CoreMinimal.h"
 
-#define C_PROTECTED(variable); protected:\
-                                variable;\
-                             private:\
-
-#define C_PUBLIC(variable); public:\
-                              variable;\
-                          private:\
-
+/**
+ *@brief 类：一元多项式
+ */
 class UPolynomial
 {
 private:
 
     typedef TArray<FIndividual> FIndiArray;
+    typedef TArrayIterator<FIndividual> FIndiIterator;
 
     /**
      *单项式数组
@@ -25,9 +22,6 @@ private:
      *最高项数的指数
      */
     int maxExponent;
-
-
-    
 public:
 
     /**
@@ -51,10 +45,14 @@ public:
      */
     void AddIndividual(const FIndividual& inIndividual);
 
+
 private:
 
     /**
      *@brief 重新排序多项式，顺序是从高到低。
      */
     void Sort();
+
+
+    bool IsExponentExists(const FIndividual& inIndividual, int& outFoundIndex, int& outInsertIndex);
 };

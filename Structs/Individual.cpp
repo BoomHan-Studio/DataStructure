@@ -21,8 +21,12 @@ std::string FIndividual::ToString(bool isSignedIfPositive, char inDisplayChar) c
         return "";
     }
     const std::string symbol = (isSignedIfPositive) ? "+" : "";
-    const std::string coefStr = UDataHandleStatics::PurifyDecimal(Coefficient != 1 ? std::to_string(Coefficient) : "");
-    const std::string expoStr = (Exponent != 1 ? '^' + std::to_string(Exponent) : "");
+    if (!Exponent)
+    {
+        return (symbol + UDataHandleStatics::ToStringFromNumber(Coefficient));
+    }
+    const std::string coefStr = (!UDataHandleStatics::IsNearlyEqual(Coefficient, 1) ? UDataHandleStatics::ToStringFromNumber(Coefficient) : "");
+    const std::string expoStr = ((Exponent != 1) ? '^' + UDataHandleStatics::ToStringFromNumber(Exponent) : "");
     return (symbol + coefStr + inDisplayChar + expoStr);
 }
 
@@ -41,17 +45,27 @@ bool FIndividual::IsExponentSmallerThan(const FIndividual& another) const
     return (Exponent < another.Exponent);
 }
 
-bool FIndividual::operator==(const FIndividual& another)
+bool FIndividual::operator ==(const FIndividual& another) const
 {
     return (UDataHandleStatics::IsNearlyEqual(Coefficient, another.Coefficient) && IsExponentEqualTo(another));
 }
 
-bool FIndividual::operator>(const FIndividual& another)
+bool FIndividual::operator >(const FIndividual& another) const
 {
     return IsExponentLargerThan(another);
 }
 
-bool FIndividual::operator<(const FIndividual& another)
+bool FIndividual::operator <(const FIndividual& another) const
 {
     return IsExponentSmallerThan(another);
+}
+
+bool FIndividual::operator >=(const FIndividual& another) const
+{
+    return !((*this) < another || IsExponentEqualTo(another));
+}
+
+bool FIndividual::operator <=(const FIndividual& another) const
+{
+    return !((*this) > another || IsExponentEqualTo(another));
 }

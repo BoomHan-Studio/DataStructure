@@ -1,7 +1,9 @@
 ﻿#include "Classes/Polynomial.h"
-#include <iostream>
-#include "FunctionLibrarys/DataHandleStatics.h"
+#include "CoreMinimal.h"
+
+#ifdef COREMINIMAL
 using namespace std;
+#endif
 
 /*class TestClass
 {
@@ -43,35 +45,24 @@ struct TObjectPtr
 
 int main()
 {
-    /*TArray<FIndividual> individuals;
-    individuals.Add(FIndividual(1,3));
-    individuals.Add(FIndividual(2.14, 2));
+    TArray<FIndividual> individuals;
+    individuals.Add(FIndividual(3,6), FIndividual(7.014, 7), FIndividual(-4, 12));
+    //individuals.Add(FIndividual(2,3));
+    //individuals.Add(FIndividual(2.14, 2));
     FIndividual indi(2.732, 8);
     individuals.Add(indi);
-    individuals.Insert(indi, individuals.CreateIterator());*/
-    /*UPolynomial* polynomial = new UPolynomial(individuals);
-    polynomial->PrintF();
-    cout << individuals.GetSize() << endl;*/
+    //individuals.Insert(indi, individuals.CreateIterator());
+    UPolynomial* polynomial = new UPolynomial(individuals);
+    polynomial->AddIndividual(FIndividual(1, 9));
+    polynomial->PrintF(HighToLow);
+    //cout << individuals.GetSize() << endl;
 
-    TArray<int> intArray;
-    intArray.Add(1, 3, 6, 7, 100.1);
+    /*TArray<int> intArray;
+    intArray.Add(1, -3, 9, 7, 100.1);
     bool addUniquesSuccess;
-    intArray.AddUnique(addUniquesSuccess,  2, -4, 5.15645);
-    //cout << addUniquesSuccess << endl;
-    intArray.PrintF();
-    cin.get();
-    intArray.SortArray(Sequential);
-    //intArray.PrintF();
+    intArray.AddUnique(addUniquesSuccess, 1, 2, -4, 5.15645);
+    cout << UDataHandleStatics::ToString(addUniquesSuccess) << endl;
+    intArray.SortArray(Inverted);
+    intArray.PrintF();*/
     
 }
-
-
-
-
-
-
-/*TestClass* class1 = new TestClass();
-class1->TestFunction();
-    
-TObjectPtr<TestClass> class2 = new TestClass();
-class2->TestFunction();*/
