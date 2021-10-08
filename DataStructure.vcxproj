@@ -161,19 +161,13 @@
     <ClCompile Include="Classes\Polynomial.cpp" />
     <ClCompile Include="DataStructure_Lab.cpp" />
     <ClCompile Include="FunctionLibrarys\DataHandleStatics.cpp" />
-    <ClCompile Include="FunctionLibrarys\VaragesFunLibrary.cpp" />
-    <ClCompile Include="Structs\Array.cpp" />
-    <ClCompile Include="Structs\ArrayIterator.cpp" />
     <ClCompile Include="Structs\Individual.cpp" />
-    <ClCompile Include="Structs\LinkNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classes\Polynomial.h" />
     <ClInclude Include="Enums\EnumLibrary.h" />
     <ClInclude Include="FunctionLibrarys\DataHandleStatics.h" />
-    <ClInclude Include="FunctionLibrarys\VaragesFunLibrary.h" />
     <ClInclude Include="Structs\Array.h" />
-    <ClInclude Include="Structs\ArrayIterator.h" />
     <ClInclude Include="Structs\Individual.h" />
     <ClInclude Include="Structs\LinkNode.h" />
   </ItemGroup>
