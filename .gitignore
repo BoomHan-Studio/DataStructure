@@ -32,6 +32,5 @@
 *.app
 
 /Debug/*
-*DataStructure.
 
 .gitignore
