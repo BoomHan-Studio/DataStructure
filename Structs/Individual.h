@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include <iostream>
-#include <string>
+#include "CoreMinimal.h"
 
 /**
  *结构体：单项式
@@ -25,6 +24,12 @@ struct FIndividual
     FIndividual(const double coef = 1, const int expo = 0);
 
     /**
+     *@brief 拷贝构造函数。
+     *@param another 另一个单项式对象引用
+     */
+    FIndividual(const FIndividual& another);
+
+    /**
      *@brief 析构函数。
      */
     ~FIndividual();
@@ -35,7 +40,7 @@ struct FIndividual
      *@param inDisplayChar 展示的字母，默认为x
      *@return 一个成型的字符串
      */
-    std::string ToString(bool isSignedIfPositive = true, char inDisplayChar = 'x') const;
+    String ToString(bool isSignedIfPositive = true, char inDisplayChar = 'x') const;
 
     /**
      *@brief 指数是否相等。
@@ -57,6 +62,24 @@ struct FIndividual
      *@return 前者的指数是否更小
      */
     bool IsExponentSmallerThan(const FIndividual& another) const;
+
+    /**
+     *@brief 指数对比，返回一个枚举值。
+     *@param another 另一个单项式对象引用
+     *@return 两者的指数大小情况
+     */
+    EExponentsCompare ExponentCompareWith(const FIndividual& another) const;
+
+    /**
+     *@brief 求导运算。
+     *@note 将改变自身的值。
+     */
+    void Derivate();
+
+    /**
+     *
+     */
+    FIndividual& operator =(const FIndividual& another);
 
     /**
      *@brief 两单项式是否相等。
@@ -92,4 +115,44 @@ struct FIndividual
      *@return 前者的指数是否不是更大
      */
     bool operator <=(const FIndividual& another) const;
+
+    /**
+     *@brief 运算符+=，对另一个单项式求加法。
+     *@param another 另一个单项式对象引用
+     *@note 两单项式指数必须相等，否则无法相加!
+     */
+    FIndividual& operator +=(const FIndividual& another);
+
+    /**
+     *@brief 运算符-=，对另一个单项式求减法。
+     *@param another 另一个单项式对象引用
+     *@note 两单项式指数必须相等，否则无法相减!
+     */
+    FIndividual& operator -=(const FIndividual& another);
+
+    /**
+     *
+     */
+    FIndividual& operator *=(const FIndividual& another);
+
+    /**
+     *@brief 运算符+，对另一个单项式求加法。
+     *@param another 另一个单项式对象引用
+     *@return 两者相加后得出的新单项式
+     *@note 两单项式指数必须相等，否则无法相加!
+     */
+    const FIndividual operator +(const FIndividual& another);
+
+    /**
+     *@brief 运算符-，对另一个单项式求减法。
+     *@param another 另一个单项式对象引用
+     *@return 两者相减后得出的新单项式
+     *@note 两单项式指数必须相等，否则无法相减!
+     */
+    const FIndividual operator -(const FIndividual& another);
+
+    /**
+     *
+     */
+    const FIndividual operator *(const FIndividual& another);
 };

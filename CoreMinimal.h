@@ -6,6 +6,24 @@
 #include <iostream>
 #include <cstdlib>
 #include <sstream>
+#include <map>
+
+#pragma region STDTypes
+
+typedef unsigned int uint;
+typedef std::string String;
+typedef std::stringstream StringStream;
+template<typename T1, typename T2>
+using TMap = std::map<T1, T2>;
+
+using std::cout;
+using std::endl;
+using std::cin;
+#define Cout cout
+#define Endl endl
+#define Cin cin
+
+#pragma endregion STDtypes
 
 #pragma region AccessMacros
 
@@ -38,5 +56,8 @@ namespace StdEPS
 }
 
 #define NOT_FOUND -1
+
+#define FORCEINLINE _forceinline
+#define Self (*this)
 
 #endif

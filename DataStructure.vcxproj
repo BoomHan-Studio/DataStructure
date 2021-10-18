@@ -158,19 +158,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Classes\Demos\Demo.cpp" />
+    <ClCompile Include="Classes\Demos\DemoOfBrackets.cpp" />
+    <ClCompile Include="Classes\Demos\DemoOfPolynomial.cpp" />
     <ClCompile Include="Classes\Polynomial.cpp" />
     <ClCompile Include="DataStructure_Lab.cpp" />
+    <ClCompile Include="FunctionLibrarys\ApplicationStatics.cpp" />
     <ClCompile Include="FunctionLibrarys\DataHandleStatics.cpp" />
+    <ClCompile Include="FunctionLibrarys\DebugStatics.cpp" />
+    <ClCompile Include="FunctionLibrarys\PolynomialStatics.cpp" />
     <ClCompile Include="Structs\Individual.cpp" />
+    <ClCompile Include="Structs\Stack.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Classes\Demos\Demo.h" />
+    <ClInclude Include="Classes\Demos\DemoOfBrackets.h" />
+    <ClInclude Include="Classes\Demos\DemoOfPolynomial.h" />
     <ClInclude Include="Classes\Polynomial.h" />
+    <ClInclude Include="Core.h" />
     <ClInclude Include="CoreMinimal.h" />
+    <ClInclude Include="DataStructure_Lab.h" />
     <ClInclude Include="Enums\EnumLibrary.h" />
+    <ClInclude Include="FunctionLibrarys\ApplicationStatics.h" />
+    <ClInclude Include="FunctionLibrarys\ApplicationStatics.inl" />
     <ClInclude Include="FunctionLibrarys\DataHandleStatics.h" />
+    <ClInclude Include="FunctionLibrarys\DataHandleStatics.inl" />
+    <ClInclude Include="FunctionLibrarys\DebugStatics.h" />
+    <ClInclude Include="FunctionLibrarys\DebugStatics.inl" />
+    <ClInclude Include="FunctionLibrarys\PolynomialStatics.h" />
+    <ClInclude Include="FunctionLibrarys\PolynomialStatics.inl" />
+    <ClInclude Include="FunctionLibrarys\Statics.h" />
     <ClInclude Include="Structs\Array.h" />
     <ClInclude Include="Structs\Individual.h" />
     <ClInclude Include="Structs\LinkNode.h" />
+    <ClInclude Include="Structs\Stack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

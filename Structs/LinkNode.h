@@ -1,7 +1,5 @@
 ﻿#pragma once
-#include "Enums/EnumLibrary.h"
-#include <iostream>
-
+#include "CoreMinimal.h"
 
 /**
  *@brief 模板结构体：节点
@@ -44,8 +42,8 @@ struct TLinkNode
      */
     TLinkNode(const TLinkNode& copy)
     :Element(copy.Element),
-    Last(copy.Last),
-    Next(copy.Next)
+    Last(nullptr),
+    Next(nullptr)
     {
 
     }
@@ -60,7 +58,7 @@ struct TLinkNode
         Element = another.Element;
         Last = another.Last;
         Next = another.Next;
-        return *this;
+        return Self;
     }
 
     /**
@@ -71,7 +69,7 @@ struct TLinkNode
     TLinkNode& operator =(const T& elem)
     {
         Element = elem;
-        return *this;
+        return Self;
     }
 
     /**

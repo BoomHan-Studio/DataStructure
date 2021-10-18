@@ -35,7 +35,7 @@ struct TArray
     /**
      *链表元素个数(保护成员!)
      */
-    S_PROTECTED(int size);
+    S_PROTECTED(uint size);
 
     /**
      *@brief 构造函数，生成若干个相同值的元素
@@ -65,6 +65,20 @@ struct TArray
     size(0)
     {
         
+    }
+
+    /**
+     *@brief 拷贝构造函数。
+     */
+    TArray(const TArray& another)
+        :Head(nullptr),
+        Tair(nullptr),
+        size(0)
+    {
+        for (FNode* node = another.Head; node; node = node->Next)
+        {
+            AddCall(node->Element);
+        }
     }
 
     /**
@@ -159,30 +173,37 @@ struct TArray
     }
 
     /**
-     *@brief 在数组中插入数据。
+     *@brief 在数组中插入元素。
      *@param inValue 插入的值对象引用
      *@param inIt 迭代器对象引用
      *@note 会在迭代器节点的前面插入一个新节点。
      */
     virtual void Insert(const T& inValue, const FIterator& inIt)
     {
-        if ((!size) || (!inIt.IsValid())) return;
-        FNode* newNode = new FNode(inValue);
-        FNode* itNode = const_cast<FIterator&>(inIt).ToRawNode();
-        if (IsHead(itNode))
+        if (!size)
         {
-            AddOnHead(newNode);
+            Add(inValue);
         }
         else
         {
-            FNode* lastNode = itNode->Last;
-            InsertNodes(lastNode, newNode, itNode);
+            if (!inIt.IsValid()) return;
+            FNode* newNode = new FNode(inValue);
+            FNode* itNode = const_cast<FIterator&>(inIt).ToRawNode();
+            if (IsHead(itNode))
+            {
+                AddOnHead(newNode);
+            }
+            else
+            {
+                FNode* lastNode = itNode->Last;
+                InsertNodes(lastNode, newNode, itNode);
+            }
+            size++;
         }
-        size++;
     }
 
     /**
-     *@brief 在数组中插入数据。
+     *@brief 在数组中插入元素。
      *@param inValue 插入的值对象引用
      *@param inIndex 目标索引值
      *@note 如果输入索引存在越界现象，则会将其对数组大小size求余后运算。
@@ -194,13 +215,52 @@ struct TArray
         {
             inIndex = ToRealIndex(inIndex);
         }
-        catch (int)
+        catch (uint)
         {
             std::cout << "Exception in Array.h : Insert()" << std::endl;
             exit(1);
         }
         inIndex = ToRealIndex(inIndex);
         Insert(inValue, CreateIterator() + inIndex);
+    }
+
+    /**
+     *@brief 在数组中插入值唯一的元素。
+     *@param outStatus 是否添加成功
+     *@param inValue 插入的值对象引用
+     *@param inIt 迭代器对象引用
+     *@note 会在迭代器节点的前面插入一个新节点。如果数组中已有此元素，则会插入失败。
+     */
+    void InsertUnique(bool& outStatus, const T& inValue, const FIterator& inIt)
+    {
+        outStatus = !Contains(inValue);
+        if (outStatus)
+        {
+            Insert(inValue, inIt);
+        }
+    }
+
+    /**
+     *@brief 在数组中插入元素。
+     *@param outStatus 是否添加成功
+     *@param inValue 插入的值对象引用
+     *@param inIndex 目标索引值
+     *@note 如果输入索引存在越界现象，则会将其对数组大小size求余后运算。
+     *@note 会在目标索引的前面插入一个新节点。如果数组中已有此元素，则会插入失败。
+     */
+    void InsertUnique(bool& outStatus, const T& inValue, int inIndex)
+    {
+        try
+        {
+            inIndex = ToRealIndex(inIndex);
+        }
+        catch (uint)
+        {
+            std::cout << "Exception in Array.h : InsertUnique()" << std::endl;
+            exit(1);
+        }
+        inIndex = ToRealIndex(inIndex);
+        InsertUnique(outStatus, inValue, CreateIterator() + inIndex);
     }
     
     /**
@@ -243,7 +303,7 @@ struct TArray
         {
             FNode targetNode = At(inIndex);
         }
-        catch (int)
+        catch (uint)
         {
             std::cout << "Exception in Array.h : RemoveByIndex()" << std::endl;
             return;
@@ -285,7 +345,7 @@ struct TArray
      *@brief 获取数组大小
      *@return 数组的元素个数
      */
-    int GetSize() const
+    uint GetSize() const
     {
         return size;
     }
@@ -297,7 +357,7 @@ struct TArray
      */
     FIterator CreateIterator(ETraversalMethod inMethod = Sequential)
     {
-        return FIterator(*this, inMethod);
+        return FIterator(Self, inMethod);
     }
 
     /**
@@ -342,7 +402,7 @@ struct TArray
         {
             inIndex = ToRealIndex(inIndex);
         }
-        catch (int)
+        catch (uint)
         {
             std::cout << "Exception in Array.h : At()" << std::endl;
             exit(1);
@@ -385,6 +445,19 @@ struct TArray
     }
 
     /**
+     *
+     */
+    TArray& operator =(const TArray& another)
+    {
+        ClearArray();
+        for (FNode* node = another.Head; node; node = node->Next)
+        {
+            AddCall(node->Element);
+        }
+        return Self;
+    }
+
+    /**
      *@brief 为此数组由大到小排序。
      *@version 1.0
      *@param inMethod 排序方式，HighToLow是由高到低，LowToHigh是由低到高
@@ -408,6 +481,18 @@ struct TArray
             {
                 UDataHandleStatics::Swap(nodeI, targetNode, [](FNode* nodeA, FNode* nodeB)->void{nodeA->Element = nodeB->Element;});
             }
+        }
+    }
+
+    /**
+     *@brief 清空数组。
+     */
+    void ClearArray()
+    {
+        while (size)
+        {
+            //Cout << "移除" << Endl;
+            RemoveByIndex(0);
         }
     }
 
@@ -490,7 +575,7 @@ protected:
      *@param outMethod 输出遍历方式
      *@param outTraversalTimes 输出遍历次数
      */
-    void GetTraverseDatas(int index, ETraversalMethod& outMethod, int& outTraversalTimes)
+    void GetTraverseDatas(uint index, ETraversalMethod& outMethod, int& outTraversalTimes)
     {
         bool fromHead = (index < size / 2);
         outMethod = fromHead ? Sequential : Inverted;
@@ -515,18 +600,35 @@ protected:
         Add(inValue);
     }
 
+    /**
+     *@brief 绑定前后两个节点，使二者指针域互相指向。
+     *@param inFormerNode 前一个节点
+     *@param inLatterNode 后一个节点
+     *@note 顺序不能反！
+     */
     void BindNodes(FNode* inFormerNode, FNode* inLatterNode)
     {
         inFormerNode->Next = inLatterNode;
         inLatterNode->Last = inFormerNode;
     }
 
+    /**
+     *@brief 将目标节点插入两个节点之间。
+     *@param inFormerNode 前一个节点
+     *@param inTargetNode 想要插入的节点
+     *@param inLatterNode 后一个节点
+     *@note 顺序不能反！
+     */
     void InsertNodes(FNode* inFormerNode, FNode* inTargetNode, FNode* inLatterNode)
     {
         BindNodes(inFormerNode, inTargetNode);
         BindNodes(inTargetNode, inLatterNode);
     }
 
+    /**
+     *@brief 在头结点前插入节点，并使其成为新的头结点。
+     *@param inNewNode 新的节点
+     */
     void AddOnHead(FNode* inNewNode)
     {
         BindNodes(inNewNode, Head);
@@ -586,20 +688,36 @@ protected:
         }
     }
 
-    bool IsEqualNodes(FNode* inNode, FNode* targetNode) const
+    /**
+     *@brief 两个节点是否为同一节点。
+     *@param inNodeA 输入节点A
+     *@param inNodeB 输入节点B
+     *@return 两节点的数据域、指针域都相同则返回真，否则返回假。
+     */
+    bool IsEqualNodes(FNode* inNodeA, FNode* inNodeB) const
     {
-        if ((!inNode) || (!targetNode))
+        if ((!inNodeA) || (!inNodeB))
         {
             return false;
         }
-        return inNode->IsEqualTo(*targetNode, ValueRequired, LastPtrRequired, NextPtrRequired);
+        return inNodeA->IsEqualTo(*inNodeB, ValueRequired, LastPtrRequired, NextPtrRequired);
     }
 
+    /**
+     *@brief 某节点是否为头结点。
+     *@param inNode 输入节点
+     *@return 若该节点是头结点则返回真，否则返回假。
+     */
     bool IsHead(FNode* inNode) const
     {
         return IsEqualNodes(inNode, Head);
     }
 
+    /**
+     *@brief 某节点是否为头结点。
+     *@param inNode 输入节点
+     *@return 若该节点是头结点则返回真，否则返回假。
+     */
     bool IsTair(FNode* inNode) const
     {
         return IsEqualNodes(inNode, Tair);
@@ -649,6 +767,12 @@ struct TArrayIterator
         
     }
 
+    TArrayIterator(const TArrayIterator& another)
+        :CurrentNode(another.CurrentNode)
+    {
+        
+    }
+
     /**
      *@brief 转换为原始的节点。
      *@return 当前指向的节点
@@ -668,52 +792,44 @@ struct TArrayIterator
     }
 
     /**
-     *@brief 根据遍历方式不同移动一次。
-     *@param inMethod 迭代方式
+     *@brief 根据遍历方式不同移动若干次。
+     *@param inMethod 遍历方式
+     *@param inMoveTimes 移动的次数
+     *@note 如果是顺序遍历则向Next方向移动，否则向Last方向移动。
      */
-    TArrayIterator& MoveIterator(ETraversalMethod inMethod, unsigned int moveTimes = 1)
+    TArrayIterator& MoveIterator(ETraversalMethod inMethod, unsigned int inMoveTimes = 1)
     {
-        if (inMethod == Sequential)
+        while (inMoveTimes--)
         {
-            while (moveTimes--)
+            (inMethod == Sequential) ? ++Self : --Self;
+            if (!IsValid())
             {
-                ++(*this);
+                break;
             }
         }
-        else
-        {
-            while (moveTimes--)
-            {
-                --(*this);
-            }
-        }
-        return (*this);
+        return Self;
     }
 
     /**
-     *@brief 迭代器向后移动一定单位
+     *@brief 迭代器向后移动一定单位，返回一个新的迭代器。
      *@param inNum 向后移动的单位数量
      */
-    TArrayIterator& operator +(unsigned int inNum)
+    TArrayIterator operator +(unsigned int inNum)
     {
-        while (inNum--)
-        {
-            ++(*this);
-        }
-        return (*this);
+        TArrayIterator copy(Self);
+        copy += inNum;
+        return copy;
     }
 
     /**
-     *@brief 迭代器向前移动一定单位
+     *@brief 迭代器向前移动一定单位，返回一个新的迭代器。
      *@param inNum 向前移动的单位数量
      */
-    TArrayIterator& operator -(unsigned int inNum)
+    TArrayIterator operator -(unsigned int inNum)
     {
-        while (inNum--)
-        {
-            --(*this);
-        }
-        return (*this);
+        TArrayIterator copy(Self);
+        copy -= inNum;
+        return copy;
     }
 
     /**
@@ -722,8 +838,11 @@ struct TArrayIterator
      */
     TArrayIterator& operator += (unsigned int inNum)
     {
-        (*this) = (*this) + inNum;
-        return (*this);
+        while (inNum--)
+        {
+            ++Self;
+        }
+        return Self;
     }
 
     /**
@@ -732,8 +851,11 @@ struct TArrayIterator
      */
     TArrayIterator& operator -=(unsigned int inNum)
     {
-        (*this) = (*this) - inNum;
-        return (*this);
+        while (inNum--)
+        {
+            --Self;
+        }
+        return Self;
     }
 
     /**
@@ -743,7 +865,7 @@ struct TArrayIterator
     TArrayIterator& operator ++()
     {
         CurrentNode = CurrentNode->Next;
-        return (*this);
+        return Self;
     }
 
     /**
@@ -753,7 +875,16 @@ struct TArrayIterator
     TArrayIterator& operator --()
     {
         CurrentNode = CurrentNode->Last;
-        return (*this);
+        return Self;
+    }
+
+    /**
+     *@brief 解指针(实际上解的是节点的指针)。
+     *@return 当前的元素对象引用
+     */
+    T& operator *() const
+    {
+        return CurrentNode->Element;
     }
 
     /**
@@ -763,6 +894,15 @@ struct TArrayIterator
     T& operator *()
     {
         return CurrentNode->Element;
+    }
+
+    /**
+     *@brief 箭头操作符，有解指针操作。
+     *@warning 有效性待定!
+     */
+    T* operator ->() const
+    {
+        return &(CurrentNode->Element);
     }
 
     /**
