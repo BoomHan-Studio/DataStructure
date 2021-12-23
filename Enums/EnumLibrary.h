@@ -34,3 +34,31 @@ enum EBracketsSituation
     Valid,
     RightOverflow
 };
+
+enum ELinesRelation
+{
+    Parallel,
+    Intersecting,
+    Perpendicular
+};
+
+enum ETreeNodeChildDirection
+{
+    Left = 'L',
+    Right = 'R'
+};
+
+enum EBinaryTreeTraverseMethod
+{
+    Sequence,
+    Secondary,
+    Rear,
+	Level
+};
+
+enum EDebugLevel
+{
+    Log,
+    Warning,
+    Error
+};

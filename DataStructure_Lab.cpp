@@ -1,29 +1,15 @@
 ﻿#include "DataStructure_Lab.h"
 
-void OpenDemo()
-{
-    ADemoCreator* creator = new ADemoCreator();
-    creator->ShowDemosList();
-    int reply;
-    cin >> reply;
-    ADemo* demo = creator->CreateDemo(reply);
-    if (demo)
-    {
-        demo->DemonStration();
-    }
-}
-
 int main()
 {
-    ADemoCreator* creator = new ADemoCreator();
-    creator->ShowDemosList();
-    int reply;
-    cin >> reply;
-    cin.get();
-    ADemo* demo = creator->CreateDemo(reply);
-    if (demo)
-    {
-        demo->DemonStration();
-    }
-    return 0;
+	OpenDemo();
+	/*FString str1 = "123456";
+	FString str2("789");
+	cout << str1 << endl;
+	cout << str2 << endl;*/
+	//str1 += str2;
+	//cout << str1 << endl;
+	/*str1.Insert(1, "---");
+	cout << str1 << endl;*/
+	return 0;
 }

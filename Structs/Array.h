@@ -2,6 +2,7 @@
 #include "LinkNode.h"
 #include "CoreMinimal.h"
 #include "FunctionLibrarys/DataHandleStatics.h"
+#include "FunctionLibrarys/DebugStatics.h"
 
 /**
  *@brief 模板结构体：数组(链表)
@@ -9,13 +10,13 @@
 template<typename T>
 struct TArray
 {
-    typedef TLinkNode<T> FNode;
-    typedef FNode* (TArray::*Compare)(FNode*);
+    using FNode = TLinkNode<T>;
+    using Compare = FNode* (TArray::*)(FNode*) const;
     
     template<typename T1>
     friend struct TArrayIterator;
 
-    typedef TArrayIterator<T> FIterator;
+    using FIterator = TArrayIterator<T>;
     
     /**
      *头结点(保护成员!)
@@ -30,7 +31,7 @@ struct TArray
     /**
      *链表
      */
-    FNode LinkNode;
+    FNode* LinkNode;
 
     /**
      *链表元素个数(保护成员!)
@@ -43,14 +44,14 @@ struct TArray
      *@param inValue 每个元素的值右值引用
      */
     TArray(T&& inValue, int inSize = 1)
-    :Head(&LinkNode),
+    :LinkNode(new FNode(inValue)),
+	Head(LinkNode),
     Tair(Head),
-    LinkNode(FNode(inValue)),
     size(1)
     {
         for (; inSize > 1; inSize--)
         {
-            AddCall(inValue);
+            Add(inValue);
         }
         Tair->Next = nullptr;
     }
@@ -61,7 +62,7 @@ struct TArray
     TArray()
     :Head(nullptr),
     Tair(nullptr),
-    LinkNode(FNode()),
+	LinkNode(nullptr),
     size(0)
     {
         
@@ -77,7 +78,7 @@ struct TArray
     {
         for (FNode* node = another.Head; node; node = node->Next)
         {
-            AddCall(node->Element);
+            Add(node->Element);
         }
     }
 
@@ -98,11 +99,11 @@ struct TArray
      *@brief 在数组的末尾添加元素。
      *@param inValue 添加的元素值对象引用
      */
-    virtual void Add(const T& inValue)
+    void Add(const T& inValue)
     {
-        if (!size)
+        /*if (!size)
         {
-            LinkNode.Element = inValue;
+            LinkNode->Element = inValue;
             Head = &LinkNode;
             Tair = Head;
         }
@@ -112,7 +113,20 @@ struct TArray
             Tair->Next = newNode;
             Tair = newNode;
         }
-        size++;
+        size++;*/
+    	if (!size)
+    	{
+    		LinkNode = new FNode(inValue);
+    		Head = LinkNode;
+    		Tair = Head;
+    	}
+    	else
+    	{
+    		FNode* newNode = new FNode(inValue, Tair);
+    		Tair->Next = newNode;
+    		Tair = newNode;
+    	}
+    	size++;
     }
 
     /**
@@ -178,7 +192,7 @@ struct TArray
      *@param inIt 迭代器对象引用
      *@note 会在迭代器节点的前面插入一个新节点。
      */
-    virtual void Insert(const T& inValue, const FIterator& inIt)
+    void Insert(const T& inValue, const FIterator& inIt)
     {
         if (!size)
         {
@@ -208,6 +222,7 @@ struct TArray
      *@param inIndex 目标索引值
      *@note 如果输入索引存在越界现象，则会将其对数组大小size求余后运算。
      *@note 会在目标索引的前面插入一个新节点。
+     *@warnings 请不要在数组为空时插入元素，否则会引发异常!
      */
     void Insert(const T& inValue, int inIndex)
     {
@@ -217,10 +232,8 @@ struct TArray
         }
         catch (uint)
         {
-            std::cout << "Exception in Array.h : Insert()" << std::endl;
-            exit(1);
+            UDebugStatics::ExceptionWarning("Array.h", "Insert");
         }
-        inIndex = ToRealIndex(inIndex);
         Insert(inValue, CreateIterator() + inIndex);
     }
 
@@ -230,6 +243,7 @@ struct TArray
      *@param inValue 插入的值对象引用
      *@param inIt 迭代器对象引用
      *@note 会在迭代器节点的前面插入一个新节点。如果数组中已有此元素，则会插入失败。
+     *@warnings 请不要在数组为空时插入元素，否则会引发异常!
      */
     void InsertUnique(bool& outStatus, const T& inValue, const FIterator& inIt)
     {
@@ -247,8 +261,9 @@ struct TArray
      *@param inIndex 目标索引值
      *@note 如果输入索引存在越界现象，则会将其对数组大小size求余后运算。
      *@note 会在目标索引的前面插入一个新节点。如果数组中已有此元素，则会插入失败。
+     *@warnings 请不要在数组为空时插入元素，否则会引发异常!
      */
-    void InsertUnique(bool& outStatus, const T& inValue, int inIndex)
+    void InsertUnique(bool& outStatus, const T& inValue, uint inIndex)
     {
         try
         {
@@ -256,10 +271,8 @@ struct TArray
         }
         catch (uint)
         {
-            std::cout << "Exception in Array.h : InsertUnique()" << std::endl;
-            exit(1);
+            UDebugStatics::ExceptionWarning("Array.h", "InsertUnique");
         }
-        inIndex = ToRealIndex(inIndex);
         InsertUnique(outStatus, inValue, CreateIterator() + inIndex);
     }
     
@@ -270,7 +283,7 @@ struct TArray
      */
     bool Contains(const T& inElement)
     {
-        return (FindIndex(inElement) != -1);
+        return (FindIndex(inElement) != NOT_FOUND);
     }
 
     /**
@@ -281,7 +294,7 @@ struct TArray
      */
     int FindIndex(const T& inElement)
     {
-        int outIndex = 0;
+        uint outIndex = 0;
         for (FIterator it = CreateIterator(); it.IsValid(); ++it, outIndex++)
         {
             if (inElement == *it)
@@ -297,17 +310,8 @@ struct TArray
      *@param inIndex 索引值
      *@note 如果输入索引存在越界现象，则会将其对数组大小size求余后运算。
      */
-    void RemoveByIndex(int inIndex)
+    void RemoveByIndex(uint inIndex)
     {
-        try
-        {
-            FNode targetNode = At(inIndex);
-        }
-        catch (uint)
-        {
-            std::cout << "Exception in Array.h : RemoveByIndex()" << std::endl;
-            return;
-        }
         FNode& targetNode = At(inIndex);
         HandleInRemove(&targetNode);
         size--;
@@ -319,7 +323,7 @@ struct TArray
      *@param outStatus 移除是否成功
      *@note 此重载版本还能输出移除是否成功，如不需要这个值，请调用上一个版本。如果输入索引存在越界现象，则会将其对数组大小size求余后运算。
      */
-    void RemoveByIndex(int inIndex, bool& outStatus)
+    void RemoveByIndex(uint inIndex, bool& outStatus)
     {
         outStatus = false;
         RemoveByIndex(inIndex);
@@ -334,6 +338,7 @@ struct TArray
      */
     void Remove(const T& inElement, bool& outStatus)
     {
+    	outStatus = false;
         const int targetIndex = FindIndex(inElement);
         if (targetIndex != -1)
         {
@@ -404,10 +409,8 @@ struct TArray
         }
         catch (uint)
         {
-            std::cout << "Exception in Array.h : At()" << std::endl;
-            exit(1);
+            UDebugStatics::ExceptionWarning("Array.h", "At");
         }
-        inIndex = ToRealIndex(inIndex);
         ETraversalMethod method;
         int traversalTimes;
         GetTraverseDatas(inIndex, method, traversalTimes);
@@ -424,7 +427,7 @@ struct TArray
      *@param inIndex 输入的索引值
      *@return 对size求余后的索引
      */
-    int ToRealIndex(int inIndex) const
+    uint ToRealIndex(int inIndex) const
     {
         if ((!size) || (inIndex < 0))
         {
@@ -452,7 +455,7 @@ struct TArray
         ClearArray();
         for (FNode* node = another.Head; node; node = node->Next)
         {
-            AddCall(node->Element);
+            Add(node->Element);
         }
         return Self;
     }
@@ -491,20 +494,21 @@ struct TArray
     {
         while (size)
         {
-            //Cout << "移除" << Endl;
-            RemoveByIndex(0);
+            RemoveByIndex(size - 1);
         }
     }
 
     /**
-     *析构函数
+     *@brief 析构函数。
      */
     virtual ~TArray()
     {
-        ForEachNode([this](FNode* node)->void
+    	ClearArray();
+        /*while (Head->Next)
         {
-            Free(node);
-        });
+            RemoveByIndex(1);
+        }
+        RemoveByIndex(0);*/
     }
 
 #pragma region InnerFunctions
@@ -544,7 +548,7 @@ protected:
      *@param inNode 输入节点
      *@return inNode->Last
      */
-    FNode* ToLast(FNode* inNode)
+    FNode* ToLast(FNode* inNode) const
     {
         return inNode->Last;
     }
@@ -554,7 +558,7 @@ protected:
      *@param inNode 输入节点
      *@return inNode->Next
      */
-    FNode* ToNext(FNode* inNode)
+    FNode* ToNext(FNode* inNode) const
     {
         return inNode->Next;
     }
@@ -581,25 +585,7 @@ protected:
         outMethod = fromHead ? Sequential : Inverted;
         outTraversalTimes = fromHead ? index : size - index - 1;
     }
-
-    /**
-     *@brief 调用虚函数Add
-     *@note 只在构造函数中调用
-     */
-    void AddCall(T&& inValue)
-    {
-        Add(inValue);
-    }
-
-    /**
-     *@brief 调用虚函数Add
-     *@note 只在构造函数中调用
-     */
-    void AddCall(const T& inValue)
-    {
-        Add(inValue);
-    }
-
+	
     /**
      *@brief 绑定前后两个节点，使二者指针域互相指向。
      *@param inFormerNode 前一个节点
@@ -648,12 +634,11 @@ protected:
         {
             HandleDuo(inTargetNode);
         }
-        
         Free(inTargetNode);
     }
 
     /**
-     *@brief 当只剩一个节点时的调用
+     *@brief 当只剩一个节点时的调用。
      */
     void HandleSingle(FNode* inTargetNode)
     {
@@ -662,7 +647,8 @@ protected:
     }
 
     /**
-     *@brief 当还有超过一个节点时的调用
+     *用于删除某节点后节点剩余节点的拼接。
+     *@brief 当还有超过一个节点时的调用。
      */
     void HandleDuo(FNode* inTargetNode)
     {
@@ -670,19 +656,16 @@ protected:
         FNode*& nextNode = inTargetNode->Next;
         if (IsHead(inTargetNode))
         {
-            //std::cout << "头" << std::endl;
             Head = nextNode;
             Head->Last = nullptr;
         }
         else if (IsTair(inTargetNode))
         {
-            //std::cout << "尾" << std::endl;
             Tair = lastNode;
             Tair->Next = nullptr;
         }
         else
         {
-            //std::cout << "飞头飞卫" << std::endl;
             lastNode->Next = nextNode;
             nextNode->Last = lastNode;
         }
@@ -700,7 +683,7 @@ protected:
         {
             return false;
         }
-        return inNodeA->IsEqualTo(*inNodeB, ValueRequired, LastPtrRequired, NextPtrRequired);
+        return (inNodeA == inNodeB);
     }
 
     /**
@@ -733,9 +716,10 @@ protected:
         {
             return;
         }
-        inNode->Element = T(0);
+        /*inNode->Element = T(0);
         inNode->Last = nullptr;
-        inNode->Next = nullptr;
+        inNode->Next = nullptr;*/
+    	delete inNode;
     }
 
 #pragma endregion InnerFunctions
@@ -810,6 +794,22 @@ struct TArrayIterator
         return Self;
     }
 
+    
+
+    bool operator >(const TArrayIterator& another)
+    {
+        TArrayIterator copy = Self;
+        while (copy.IsValid())
+        {
+            --copy;
+            if (copy.ToRawNode() == const_cast<TArrayIterator&>(another).ToRawNode())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     /**
      *@brief 迭代器向后移动一定单位，返回一个新的迭代器。
      *@param inNum 向后移动的单位数量
@@ -898,7 +898,7 @@ struct TArrayIterator
 
     /**
      *@brief 箭头操作符，有解指针操作。
-     *@warning 有效性待定!
+     *@return 节点指向的数据域的地址
      */
     T* operator ->() const
     {

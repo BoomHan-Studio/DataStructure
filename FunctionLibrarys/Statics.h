@@ -4,5 +4,5 @@
 class UStatics
 {
 protected:
-    UStatics(){}
+    UStatics() = delete;
 };

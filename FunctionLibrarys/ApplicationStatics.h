@@ -5,13 +5,10 @@ class UApplicationStatics : UStatics
 {
 private:
     /**
-    *@brief 此类禁止构造。
-    */
-    UApplicationStatics()
-        :UStatics()
-    {
-        
-    }
+     *@brief 此类禁止构造。
+     */
+    UApplicationStatics() = delete;
+	
 public:
 
     static FORCEINLINE void Pause();

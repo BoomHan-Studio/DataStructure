@@ -1,69 +1,143 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
+    <Filter Include="源文件">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
+    <Filter Include="头文件">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
+    <Filter Include="资源文件">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DataStructure.cpp">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="Core.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreMinimal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure_Lab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Polynomial.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Demos\Demo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Demos\DemoOfBrackets.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Demos\DemoOfPolynomial.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Enums\EnumLibrary.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionLibrarys\ApplicationStatics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionLibrarys\DataHandleStatics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionLibrarys\DebugStatics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionLibrarys\PolynomialStatics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionLibrarys\Statics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs\Array.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs\Individual.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs\Line.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs\LinkNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs\Stack.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs\BinaryTree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs\Queue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs\TreeNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs\TreeNode.inl">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs\Queue.inl">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs\BinaryTree.inl">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs\Stack.inl">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Demos\DemoOfBinaryTree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionLibrarys\BinaryTreeStatics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionLibrarys\BinaryTreeStatics.inl">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DataStructure_Lab.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Classes\Polynomial.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="FunctionLibrarys\DataHandleStatics.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Classes\Demos\Demo.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="FunctionLibrarys\VaragesFunLibrary.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Classes\Demos\DemoOfBrackets.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Structs\Array.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Structs\ArrayIterator.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Classes\Demos\DemoOfPolynomial.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Structs\Individual.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Structs\LinkNode.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Structs\Line.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Demos\DemoOfBinaryTree.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Classes\Polynomial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Enums\EnumLibrary.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FunctionLibrarys\DataHandleStatics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FunctionLibrarys\VaragesFunLibrary.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Structs\Array.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Structs\ArrayIterator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Structs\Individual.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Structs\LinkNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <None Include="FunctionLibrarys\ApplicationStatics.inl">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="FunctionLibrarys\DataHandleStatics.inl">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="FunctionLibrarys\DebugStatics.inl">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="FunctionLibrarys\PolynomialStatics.inl">
+      <Filter>头文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

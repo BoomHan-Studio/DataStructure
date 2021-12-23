@@ -52,7 +52,7 @@ EBracketsSituation ADemoOfBrackets::CheckBrackets(String& outOverflowedBrackets)
 {
     UDebugStatics::PutDebugPoint(1, "执行CheckBrackets函数");
     outOverflowedBrackets = "";
-    TStack<char> charStack(brackets.size());
+    TStack<char> charStack(uint(brackets.size()));
     EBracketsSituation result = Valid;
     for (auto it = brackets.begin(); it != brackets.end(); ++it)
     {

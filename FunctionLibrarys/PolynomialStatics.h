@@ -5,11 +5,10 @@
 class UPolynomialStatics : UStatics
 {
 private:
-    UPolynomialStatics()
-        :UStatics()
-    {
-        
-    }
+	/**
+	 *@brief 此类禁止构造。
+	 */
+    UPolynomialStatics() = delete;
     
 public:
 

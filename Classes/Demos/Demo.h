@@ -9,7 +9,7 @@ class ADemo
 protected:
     String demoName;
 public:
- 
+	
     /**
      *@brief 默认构造函数。
      */

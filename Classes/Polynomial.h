@@ -13,6 +13,8 @@ private:
     typedef TArray<FIndividual> FIndiArray;
     typedef TArrayIterator<FIndividual> FIndiIterator;
 
+	friend class ADemoOfPolynomial;
+
     /**
      *单项式数组
      */

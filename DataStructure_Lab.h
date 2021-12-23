@@ -1,8 +1,10 @@
 ﻿#pragma once
-#include "Classes/Polynomial.h"
 #include "Core.h"
+#include "Classes/Polynomial.h"
+#include "Classes/Demos/DemoOfBinaryTree.h"
 #include "Classes/Demos/DemoOfPolynomial.h"
 #include "Classes/Demos/DemoOfBrackets.h"
+#include "Classes/Demos/DemoOfCourseSelection.h"
 
 class ADemoCreator
 {
@@ -14,18 +16,29 @@ class ADemoCreator
 public:
     
     ADemoCreator()
-        :demosArray(TArray<int>())
+        :creationMap{{1, &ADemoCreator::CreateDemoOfPolynomial},
+        			 {2, &ADemoCreator::CreateDemoOfBrackets},
+					 {3, &ADemoCreator::CreateDemoOfBinaryTree},
+					 {4, &ADemoCreator::CreateDemoOfCourseSelection}},
+		demosArray(TArray<int>()),
+		demo(nullptr)
     {
-        creationMap.insert_or_assign(1, &ADemoCreator::CreateDemoOfPolynomial);
-        creationMap.insert_or_assign(2, &ADemoCreator::CreateDemoOfBrackets);
+        
+    }
+
+	~ADemoCreator()
+    {
+	    delete demo;
     }
 
     void ShowDemosList()
     {
-        Cout << "1.多项式运算" << Endl;
-        Cout << "2.括号匹配检验" << Endl;
+        /*cout << "1.多项式运算" << endl;
+        cout << "2.括号匹配检验" << endl;
+    	cout << "3.二叉树的相关操作演示" << endl;
+    	cout << "4.学生选课系统" << endl;
 
-        Cout << "请选择你的英雄:";
+        cout << "请选择:";*/
     }
     
     ADemo* CreateDemo(int inCommand)
@@ -41,17 +54,42 @@ public:
 
 private:
 
-    ADemo* CreateDemoOfPolynomial()
+	ADemo* demo;
+
+    FORCEINLINE ADemo* CreateDemoOfPolynomial()
     {
-        return new ADemoOfPolynomial();
+		demo = new ADemoOfPolynomial();
+        return demo;
     }
 
-    ADemo* CreateDemoOfBrackets()
+    FORCEINLINE ADemo* CreateDemoOfBrackets()
     {
-        return new ADemoOfBrackets();
+    	demo = new ADemoOfBrackets();
+        return demo;
+    }
+
+	FORCEINLINE ADemo* CreateDemoOfBinaryTree()
+    {
+    	demo = new ADemoOfBinaryTree();
+    	return demo;
+    }
+
+	FORCEINLINE ADemo* CreateDemoOfCourseSelection()
+    {
+	    demo = new ADemoOfCourseSelection();
+    	return demo;
     }
 };
 
-#ifdef COREMINIMAL
-using namespace std;
-#endif
+void OpenDemo()
+{
+    ADemoCreator* creator = new ADemoCreator();
+    creator->ShowDemosList();
+    /*int reply;
+    UDataHandleStatics::InputNumber(reply);*/
+    ADemo* demo = creator->CreateDemo(4);
+    if (demo)
+    {
+        demo->DemonStration();
+    }
+}

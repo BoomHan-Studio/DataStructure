@@ -16,6 +16,10 @@ private:
     void CreatePolynomial(UPolynomial*& outPolynomial);
 
     UPolynomial* displayPoly1;
-
+	
     UPolynomial* displayPoly2;
+
+    void ChangePoly(char inDisplayChar);
+
+    void DisplayPolys(char inDisplayChar);
 };
